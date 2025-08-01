@@ -1,7 +1,7 @@
 import numpy as np
 from pymol import cmd
-import numpy as np
-from pymol import cmd
+import logging
+from contextlib import contextmanager
 
 def pep_pretreatment(chain_label):
     
@@ -82,6 +82,7 @@ def pdb_to_adj_list():
 
 def selector(
         chain_label, 
+        full_logger:logging.Logger,
         residual_name = 'CYS',
         element_name = 'sg'
 ):
@@ -107,8 +108,9 @@ def selector(
         for j, atom_2 in enumerate(dslf):
             bond_exists = any((i == a and j == b) for bond in start_cys.bond for a, b in [bond.index])
             if bond_exists:
-                print(f'Atom index: {atom_1} bonds with Atom index: {atom_2}')
                 start.append(index_map[atom_2])
+                if full_logger:
+                    full_logger.info(f'Atom index: {atom_1} bonds with Atom index: {atom_2}')
     return start
 
 
@@ -123,6 +125,7 @@ def is_loop(adj_list, start):
     '''
 
     print(f'start with {model.atom[start].name}')
+    
     visited = set()
     found_cycle = [False]
 
@@ -138,11 +141,11 @@ def is_loop(adj_list, start):
                 dfs(neighbor, node)
 
     dfs(start, None)
-    #print(visited)
+    
     return found_cycle[0]
 
 
-def track_loop(adj_list:dict, start:int):
+def track_loop(adj_list:dict, start:int,full_logger:logging.Logger):
     '''
     Tracking the indexes in the adjacency matrix or list, given that there is a loop starting with a sulphur atom in the disulphide bond
     '''
@@ -153,7 +156,11 @@ def track_loop(adj_list:dict, start:int):
     parent = {}
     cycle_path = []
 
-    print(f'start with {model.atom[start].name}')
+    
+    if full_logger:
+        full_logger.info(f'start with {model.atom[start].name}')
+
+
     def dfs(node, par):
         visited.add(node)
         parent[node] = par
@@ -176,7 +183,9 @@ def track_loop(adj_list:dict, start:int):
                     path2.append(y)
                     y = parent[y]
 
-                path = path1[:path1.index(y)+1] + path2[::-1]
+                #Change in 01/08/2025 to fix the problem that miss selction in the last second residual
+                #path = path1[:path1.index(y)+1] + path2[::-1]
+                path = path1 + path2
 
                 if start in path:
                     cycle_path.extend(path + [start]) 
@@ -216,56 +225,94 @@ def transform_ids(
     return output
 
 
+@contextmanager
+def open_log_files(output_log_path, full_log_path):
+    try: 
+        output_log = open(output_log_path, 'a')
+        if full_log:
+            full_log = open(full_log_path, 'a')
+        yield output_log, full_log
+
+    finally:
+        if output_log:
+            output_log.close()
+        if full_log:
+            full_log.close()
+
+
+def setup_full_logger(full_log):
+    logger = logging.getLogger(f'full_log')
+    logger.setLevel(logging.INFO)
+
+    if not logger.handlers:
+        handler = logging.FileHandler(full_log, mode='a', encoding='utf-8')
+        
+        logger.addHandler(handler)
+
+    return logger
+
+
 def track_and_log(
         pdb_id:str, 
         output_dir,
+        full_log_dir,
         chain_label = None, 
         need_adj_matrix: bool = False, 
         output_residual_index = True
 ):
+    
 
+
+    if full_log_dir:
+        full_logger = setup_full_logger(full_log_dir)
 
     try:
-        cmd.fetch(pdb_id)
-    except:
-        pass        
-    chain_labels = cmd.get_chains()
+        try:
+            cmd.fetch(pdb_id)
+        except:
+            pass        
+        chain_labels = cmd.get_chains()
 
 
 
-    for chain_label in chain_labels:
-        print(f'********************Processing {pdb_id}, chain {chain_label}********************')
-        print('\n')
+        for chain_label in chain_labels:
+            if full_logger:
+                full_logger.info(f"{'*'*20} Processing {pdb_id}, chain {chain_label} {'*'*20}\n")
 
-        pep_pretreatment(chain_label)
-        adj_list = pdb_to_adj_list()
+            pep_pretreatment(chain_label)
+            adj_list = pdb_to_adj_list()
 
 
-        if need_adj_matrix:
-            print('----------Adjacency Matrix Info:----------')
-            adj_matrix, atoms = pdb_to_mtx(chain_label)
-            print(f"Adjacency Matrix Shape: {adj_matrix.shape}")
-            print("First 5 Atom in Current Peptide: ")
-            for i in range(5):
-                print(f"{i}: {atoms[i].resn} {atoms[i].name} ({atoms[i].resi})")
-            print('\n')
-        
-        print('----------Disulphide Bonds Form between Atoms:----------')
-        dslf = selector(chain_label)
-        print('\n')
-        print('----------Following Info is Compatible with PyMOL cmd.selector:----------')
-        print('\n')
-        for atom_sg in dslf:
-            print('----------Tracking Atom Indexes on the Loop:----------')
-            try:
-                ids = track_loop(adj_list, atom_sg)
-                ids.sort()
-                select_index = transform_ids(ids, output_residual_index)
-                print(select_index)
-                print('\n')
-                with open(output_dir, 'a') as log:
-                    log.write(f'"{pdb_id}", {chain_label}, {select_index}\n')
-            except:
-                print('Current Disulphide Bond Does Not in a Loop')
-                print('\n')
-    cmd.delete(f'{pdb_id}')
+            if need_adj_matrix and full_logger:
+                full_logger.info(f"{'-'*10}Adjacency Matrix Info:{'-'*10}")
+                adj_matrix, atoms = pdb_to_mtx(chain_label)
+                full_logger.info(f"Adjacency Matrix Shape: {adj_matrix.shape}\nFirst 5 Atom in Current Peptide: ")
+                for i in range(5):
+                    full_logger.info(f"{i}: {atoms[i].resn} {atoms[i].name} ({atoms[i].resi})\n")
+                    
+            if full_logger:
+                full_logger.info(f"{'-'*10}Disulphide Bonds Form between Atoms:{'-'*10}\n")
+                
+            dslf = selector(chain_label, full_logger)
+            
+            for atom_sg in dslf:
+                if full_logger:
+                    full_logger.info(f"{'-'*10}Following Info is Compatible with PyMOL cmd.selector:{'-'*10}\n")
+                    full_logger.info(f"{'-'*10}Tracking Atom Indexes on the Loop:{'-'*10}\n")
+                try:
+                    ids = track_loop(adj_list, atom_sg, full_logger)
+                    ids.sort()
+                    select_index = transform_ids(ids, output_residual_index)
+                    
+                    if full_logger:
+                        full_logger.info(f"{select_index}\n")
+
+
+                    with open(output_dir, 'a') as log:
+                        log.write(f'"{pdb_id}", {chain_label}, {select_index}\n')
+                except:
+                    if full_logger:
+                        full_logger.info('Current Disulphide Bond Does Not in a Loop\n')
+                    
+    finally:
+        cmd.delete(f'{pdb_id}')
