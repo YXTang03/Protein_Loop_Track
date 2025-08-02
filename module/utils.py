@@ -185,8 +185,7 @@ def track_loop(adj_list:dict, start:int,full_logger:logging.Logger):
 
                 #Change in 01/08/2025 to fix the problem that miss selction in the last second residual
                 path = path1[:path1.index(y)+1] + path2[::-1]
-                #path = path1 + path2
-
+                
                 if start in path:
                     cycle_path.extend(path + [start]) 
                     return True

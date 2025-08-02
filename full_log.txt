@@ -10,202 +10,6 @@ Atom index: 419 bonds with Atom index: 661
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95+96+97+98+99+100+101+102+103+104+105+106+107+108+110
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95+96+97+98+99+100+101+102+103+104+105+106+107+108+110
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+90
-
-******************** Processing 8QFZ, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 100D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 100D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 101D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 101D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 101M, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 102D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 102D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 102L, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 102M, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 103D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 103D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 103L, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 103M, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 104D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 104D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 104L, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 104L, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 104M, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 105D, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 105D, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 105D, chain C ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 105D, chain D ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 105M, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-******************** Processing 11BA, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-Atom index: 211 bonds with Atom index: 631
-Atom index: 318 bonds with Atom index: 705
-Atom index: 438 bonds with Atom index: 809
-Atom index: 491 bonds with Atom index: 542
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-15+16+17+18+19+20+21+22+23+24+26
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+40
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+58
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+65
-
-******************** Processing 11BA, chain B ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-Atom index: 1060 bonds with Atom index: 1480
-Atom index: 1167 bonds with Atom index: 1554
-Atom index: 1287 bonds with Atom index: 1658
-Atom index: 1340 bonds with Atom index: 1391
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+84
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+95+96+97+98+99+100+101+102+103+104+105+106+107+108+110
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+84
-
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
-26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+72+73+74+75+76+77+78+79+80+81+82+84
-
-******************** Processing 8QFZ, chain A ********************
-
-----------Disulphide Bonds Form between Atoms:----------
-
-Atom index: 42 bonds with Atom index: 552
-Atom index: 280 bonds with Atom index: 319
-Atom index: 419 bonds with Atom index: 661
-----------Following Info is Compatible with PyMOL cmd.selector:----------
-
-----------Tracking Atom Indexes on the Loop:----------
-
-start with SG
 34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95+96+97+98+99+100+101+102+103+104+105+106+107+108+109+110
 
 ----------Following Info is Compatible with PyMOL cmd.selector:----------
@@ -220,7 +24,7 @@ start with SG
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+137
+Current Disulphide Bond Does Not in a Loop
 
 ******************** Processing 8QFZ, chain B ********************
 
@@ -331,28 +135,28 @@ Atom index: 491 bonds with Atom index: 542
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84
+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84
 
 ----------Following Info is Compatible with PyMOL cmd.selector:----------
 
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95
+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95
 
 ----------Following Info is Compatible with PyMOL cmd.selector:----------
 
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95+96+97+98+99+100+101+102+103+104+105+106+107+108+109+110
+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+73+74+75+76+77+78+79+80+81+82+83+84+85+86+87+88+89+90+91+92+93+94+95+96+97+98+99+100+101+102+103+104+105+106+107+108+109+110
 
 ----------Following Info is Compatible with PyMOL cmd.selector:----------
 
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-15+16+17+18+19+20+21+22+23+24+25+26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72
+65+66+67+68+69+70+71+72
 
 ******************** Processing 11BA, chain B ********************
 
@@ -388,5 +192,5 @@ start with SG
 ----------Tracking Atom Indexes on the Loop:----------
 
 start with SG
-26+27+28+29+30+31+32+33+34+35+36+37+38+39+40+41+42+43+44+45+46+47+48+49+50+51+52+53+54+55+56+57+58+59+60+61+62+63+64+65+66+67+68+69+70+71+72+84+85+86+87+88+89+90+91+92+93+94+95
+65+66+67+68+69+70+71+72
 
