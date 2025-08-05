@@ -2,7 +2,7 @@ import os
 import numpy as np
 from pymol import cmd
 import logging
-import tqdm
+from tqdm import tqdm
 from pdbfixer import PDBFixer
 from openmm.app.pdbfile import PDBFile
 
@@ -62,7 +62,13 @@ class PepFix:
 
 
 class ProteinStructure:
-    """蛋白质结构数据的封装类"""
+    """
+    ## A class encapsulates methods to 
+    - Pretreat protein structures
+    - Build adjacency matrix from pdb
+    - Build adjacency list from pdb
+    - Convert adjacency matrix to adjacency list
+    """
     
     def __init__(self, chain_label: str):
         self.chain_label = chain_label
@@ -94,8 +100,11 @@ class ProteinStructure:
         self.index_map_r = {i: atom_idx for i, atom_idx in enumerate(self.atom_indices)}
     
     def build_adjacency_matrix(self) -> tuple[np.ndarray, list[any]]:
-        """Convert the protein structural from the pdb file to the undirectional graph 
-        represented by the adjacency matrix."""
+        """
+        Convert the protein structural from the pdb file to 
+        the undirectional graph 
+        represented by the adjacency matrix.
+        """
         n = len(self.atom_indices)
         adj_matrix = np.full((n, n), float('inf'))
         
@@ -132,7 +141,9 @@ class ProteinStructure:
     
     @staticmethod
     def matrix_to_list(matrix: np.ndarray) -> dict[int, list[int]]:
-        """将邻接矩阵转换为邻接表"""
+        """
+        Convert the adjacency matrix to the adjacency list.
+        """
         n = matrix.shape[0]
         adj_list = {i: [] for i in range(n)}
         
@@ -157,8 +168,15 @@ class DisulfideBondAnalyzer:
         
     def find_disulfide_atoms(self, residual_name: str = 'CYS', element_name: str = 'sg') -> list[int]:
         """
-        返回二硫键中硫原子的索引
-        等效于PyMol操作: cmd.select("chain A and resn CYS and not backbone and name sg")
+        Return the indexes of sulphur atoms in disulfide bonds
+
+        In PyMol, the outcomes of this function **equivalent** to that of operation: 
+        
+        *L* -> *atom identifiers* -> *index* 
+        
+        after the selection of sulphur atoms on disulfide bonds by 
+
+        *cmd.select("chain A and resn CYS and not backbone and name sg")*
         """
         start_cys = cmd.get_model(
             f'chain {self.protein.chain_label} and resn {residual_name} and not backbone and name {element_name}'
@@ -179,7 +197,13 @@ class DisulfideBondAnalyzer:
         return start
     
     def has_loop(self, start: int) -> bool:
-        """判断是否存在包含二硫键的环结构"""
+        """
+        Discriminate the existence of rings containing disulfide bonds.
+
+        Start searching with the sulphur atoms in disulfide bonds. 
+
+            -> Parameter *start* = indexes of sulphur atoms in disulfide bonds
+        """
         if self.logger:
             self.logger.info(f'start with {self.protein.model.atom[start].name}')
         
@@ -201,7 +225,10 @@ class DisulfideBondAnalyzer:
         return found_cycle[0]
     
     def track_loop_path(self, start: int) :# -> None | list:
-        """跟踪环路径，返回环中所有原子的索引"""
+        """
+        Tracking the indexes in the adjacency matrix or list, 
+        given that there is a loop starting with a sulphur atom in the disulphide bond.
+        """
         visited = set()
         parent = {}
         cycle_path = []
@@ -246,14 +273,23 @@ class DisulfideBondAnalyzer:
 
 
 class IndexTransformer:
-    """索引转换器"""
+    """Transform index"""
     
     def __init__(self, protein_structure: ProteinStructure):
         self.protein = protein_structure
     
     def transform_ids(self, ids: list[int], output_residual_index: bool = True) -> str:
         """
-        转换索引为PyMOL残基索引（推荐）或原子索引
+        Transform ids to 
+
+        **either** 
+
+        PyMOL residual indexes (prefered option)
+
+        **or**
+
+        PyMOL atom indexes (not recommond)
+        
         """
         if output_residual_index:
             loop_idx = list(dict.fromkeys([self.protein.model.atom[i].resi for i in ids]))
@@ -272,7 +308,9 @@ class IndexTransformer:
 
 
 class Logger:
-    """Create Log. To initialize a log, parameter path and name are needed."""
+    """
+    ### Create Log. To initialize a log, parameter path and name are needed.
+    """
     
     def __init__(
             self, 
@@ -287,7 +325,7 @@ class Logger:
             self.logger = self._setup_logger()
     
     def _setup_logger(self) -> logging.Logger:
-        """设置完整日志记录器"""
+        """setup logger"""
         logger = logging.getLogger(self.log_name)
         logger.setLevel(logging.INFO)
         
@@ -298,12 +336,15 @@ class Logger:
         return logger
     
     def get_logger(self) -> logging.Logger:
-        """获取日志记录器"""
+        """Return a logger in given name and path"""
         return self.logger
 
 
 class ProteinAnalyzer:
-    """主分析器类，协调各个组件完成蛋白质分析"""
+    """
+    ### Working pipeline
+    
+    """
     
     def __init__(self, work_dir: str):
         self.work_dir = work_dir
@@ -318,9 +359,11 @@ class ProteinAnalyzer:
         need_adj_matrix: bool = False,
         output_residual_index: bool = True
     ) -> None:
-        """分析单个蛋白质的二硫键环路"""
+        """
+        Detect the expected loop in a single protein.
+        """
         
-        # 设置日志
+        # Setup a full logger
         logger_manager = Logger(
             full_log_dir, 
             full_log_name
@@ -396,7 +439,9 @@ class ProteinAnalyzer:
         full_log_dir: str = None,
         fix_threshold: int = 10
     ) -> None:
-        """批量分析蛋白质"""
+        """
+        ### Analyze proteins in batch
+        """
         
         cmd.cd(self.work_dir)
         
