@@ -1,33 +1,24 @@
-from pymol import cmd
-from .utils import track_and_log
-from .utils import setup_full_logger
-from tqdm import tqdm
+from .utils import *
 
 def main(
-        work_dir:str,
-        rcsb_pdb_ids:str ,
-        full_log_dir:str ,
-        output_dir:str , 
-        output_residual_index:bool = True
-        
+        work_dir:str, 
+        rcsb_pdb_ids:str, 
+        output_dir:str, 
+        missing_structure_log_name:str, 
+        full_log_name:str, 
+        missing_structure_log_dir:str, 
+        full_log_dir:str, 
+        fix_threshold:int=10      
 ):
-    
-    if full_log_dir:
-        full_logger = setup_full_logger(full_log_dir)
-    cmd.cd(work_dir)
-    with open(rcsb_pdb_ids, 'r') as f:
-        content = f.read()
-        content = content.split(',')
-        pbar = tqdm(
-            content, 
-            colour='CYAN',
-            smoothing= 1.0
-        )
-        for id in pbar: 
-            pbar.set_description(f"Processing PDB: {id}" )
-            track_and_log(
-                id, 
-                output_dir,
-                full_log_dir=full_logger, 
-                output_residual_index = output_residual_index
-            )
+    analyzer = ProteinAnalyzer(work_dir)
+    analyzer.batch_analyze(
+        rcsb_pdb_ids=rcsb_pdb_ids,
+        output_dir=output_dir,
+        missing_structure_log_name= missing_structure_log_name,
+        full_log_name= full_log_name,
+        missing_structure_log_dir=missing_structure_log_dir,
+        full_log_dir=full_log_dir,
+        fix_threshold=fix_threshold
+    )
+
+
