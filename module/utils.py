@@ -19,6 +19,7 @@ class PepFix:
             pdb_id: str, 
             missing_structure_log_dir:str,
             missing_structure_log_name:str,
+            require_fix:bool = True, 
             fix_residual:bool = False,
             fix_atom:bool = True,
             fix_threshold: int = 10, 
@@ -34,32 +35,38 @@ class PepFix:
         #f'{self.work_dir}/{pdb_id}.cif'
         
         try:
+
             fixer = PDBFixer(file_path)
             fixer.findMissingResidues()
             fixer.findMissingAtoms()
             
             all_missing_atom = fixer.missingAtoms
             all_missing_res = fixer.missingResidues
+
+            #Output missing structure log if is required.
             if missing_structure_log:
                 if all_missing_atom:
                     missing_structure_log.info(f'{pdb_id}: \nMissing Atom{all_missing_atom}\n')
                 if all_missing_res:
                     missing_structure_log.info(f'{pdb_id}: \nMissing Residual{all_missing_res}\n')
-            if fix_residual is False:
-                all_missing_res = {}
-            if fix_atom is False:
-                all_missing_atom = {}
 
-            for missing_res in all_missing_res.values():
-                if len(missing_res) <= fix_threshold:
-                    fixer.addMissingAtoms()
-                    output_file_name = os.path.join(self.work_dir, f"{pdb_id}.pdb")
-                    with open(output_file_name, 'w') as f:
-                        PDBFile.writeFile(
-                            fixer.topology, 
-                            fixer.positions, 
-                            f
-                        )
+            #Fix protein structure if require_fix is True
+            if require_fix:
+                if fix_residual is False:
+                    all_missing_res = {}
+                if fix_atom is False:
+                    all_missing_atom = {}
+
+                for missing_res in all_missing_res.values():
+                    if len(missing_res) <= fix_threshold:
+                        fixer.addMissingAtoms()
+                        output_file_name = os.path.join(self.work_dir, f"{pdb_id}.pdb")
+                        with open(output_file_name, 'w') as f:
+                            PDBFile.writeFile(
+                                fixer.topology, 
+                                fixer.positions, 
+                                f
+                            )
         except Exception as e:
             print(f'Fail to fix the pdb file: {e}')
             if missing_structure_log:
@@ -97,8 +104,9 @@ class ProteinStructure:
             cmd.select(f'{aa.lower()}', f'chain {self.chain_label} and resn {aa} and not backbone')
             cmd.remove(f'{aa.lower()}')
         
-        cmd.remove('solvent')
-        cmd.remove('organic')
+        #cmd.remove('solvent')
+        #cmd.remove('organic')
+        #cmd.remove('not polymer.protein')
         
         # 获取模型数据
         self.model = cmd.get_model(f'chain {self.chain_label}')
@@ -163,7 +171,11 @@ class ProteinStructure:
 
 
 class DisulfideBondAnalyzer:
-    """二硫键分析器"""
+    """
+    ###
+    - ### Select sulphur atoms in disulphide bonds
+    - ### Track loop
+    """
     
     def __init__(
             self, 
@@ -189,7 +201,7 @@ class DisulfideBondAnalyzer:
             f'chain {self.protein.chain_label} and resn {residual_name} and not backbone and name {element_name}'
         )
         dslf = [atom.index for atom in start_cys.atom]
-        start = []
+        self.start_atoms = []
         
         for i, atom_1 in enumerate(dslf):
             for j, atom_2 in enumerate(dslf):
@@ -197,11 +209,11 @@ class DisulfideBondAnalyzer:
                     (i == a and j == b) for bond in start_cys.bond for a, b in [bond.index]
                 )
                 if bond_exists:
-                    start.append(self.protein.index_map[atom_2])
+                    self.start_atoms.append(self.protein.index_map[atom_2])
                     if self.logger:
                         self.logger.info(f'Atom index: {atom_1} bonds with Atom index: {atom_2}')
         
-        return start
+        return self.start_atoms
     
     def has_loop(self, start: int) -> bool:
         """
@@ -231,7 +243,11 @@ class DisulfideBondAnalyzer:
         dfs(start, None)
         return found_cycle[0]
     
-    def track_loop_path(self, start: int) :# -> None | list:
+    def track_loop_path(
+            self, 
+            start: int, 
+            adj_list: dict
+    ) :# -> None | list:
         """
         Tracking the indexes in the adjacency matrix or list, 
         given that there is a loop starting with a sulphur atom in the disulphide bond.
@@ -247,7 +263,7 @@ class DisulfideBondAnalyzer:
             visited.add(node)
             parent[node] = par
             
-            for neighbor in self.protein.adj_list[node]:
+            for neighbor in adj_list[node]:
                 if neighbor == par:
                     continue
                 if neighbor in visited:
@@ -353,10 +369,14 @@ class ProteinAnalyzer:
     
     """
     
-    def __init__(self, work_dir: str):
+    def __init__(
+            self, 
+            work_dir: str, 
+    ):
         self.work_dir = work_dir
         self.pdb_fixer = PepFix(work_dir)
-        
+
+
     def analyze_protein(
         self, 
         pdb_id: str, 
@@ -381,6 +401,7 @@ class ProteinAnalyzer:
             
             try:
                 cmd.load(os.path.join(self.work_dir, f"{pdb_id}.pdb"))
+
             except:
                 cmd.load(os.path.join(self.work_dir, f"{pdb_id}.cif"))
             
@@ -394,11 +415,13 @@ class ProteinAnalyzer:
                 protein = ProteinStructure(chain_label)
                 protein.preprocess_peptide()
                 protein.build_adjacency_list()
+
             except Exception as e:    
                 print(f'Error: when pretreat pepride {pdb_id} {chain_label}')
                 if full_logger:
                     full_logger.error(f'Error: when pretreat pepride {pdb_id} {chain_label}')
                 pass
+
 
             if need_adj_matrix and full_logger:
                 full_logger.info(f"{'-'*10}Adjacency Matrix Info:{'-'*10}")
@@ -424,7 +447,13 @@ class ProteinAnalyzer:
                     full_logger.info(f"{'-'*10}Tracking Atom Indexes on the Loop:{'-'*10}\n")
                 
                 try:
-                    ids = analyzer.track_loop_path(atom_sg)
+                    remove_sulphur = set(dslf) - set([atom_sg])
+                    current_adj_list = {
+                        k : v for k, v in protein.adj_list.item() 
+                        if k not in remove_sulphur
+                    }
+                    
+                    ids = analyzer.track_loop_path(atom_sg, current_adj_list)
                     if ids:
                         ids.sort()
                         select_index = transformer.transform_ids(ids, output_residual_index)
@@ -479,6 +508,7 @@ class ProteinAnalyzer:
                         pdb_id, 
                         missing_structure_log_dir,
                         missing_structure_log_name,
+                        require_fix=False,
                         fix_residual=False, 
                         fix_atom=True,
                         fix_threshold=fix_threshold                  
