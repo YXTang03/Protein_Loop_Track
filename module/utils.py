@@ -63,7 +63,7 @@ class PepFix:
         except Exception as e:
             print(f'Fail to fix the pdb file: {e}')
             if missing_structure_log:
-                missing_structure_log.error(f'Fail to fix the pdb file {pdb_id}: {e}')
+                missing_structure_log.error(f'ERROR{pdb_id}: \nFail to fix the pdb file {pdb_id}: {e}\n')
             pass
 
 
