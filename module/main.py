@@ -5,17 +5,21 @@ def main(
         rcsb_pdb_ids:str, 
         output_dir:str, 
         missing_structure_log_name:str, 
-        full_log_name:str, 
+        full_log_name:str,
         missing_structure_log_dir:str, 
         full_log_dir:str, 
-        fix_threshold:int=10      
+        require_fix:bool = True,
+        fix_threshold:int=10,
+        min_res = 10     
 ):
     analyzer = ProteinAnalyzer(work_dir)
     analyzer.batch_analyze(
+        min_res=min_res,
         rcsb_pdb_ids=rcsb_pdb_ids,
         output_dir=output_dir,
         missing_structure_log_name= missing_structure_log_name,
         full_log_name= full_log_name,
+        require_fix=require_fix,
         missing_structure_log_dir=missing_structure_log_dir,
         full_log_dir=full_log_dir,
         fix_threshold=fix_threshold
