@@ -1,6 +1,12 @@
 {
     "work_dir": "E:/Coding/jupyter_root/ynby/pj3/repo/test", 
     "rcsb_pdb_ids": "./test.txt", 
-    "full_log_dir": "./full_log.txt", 
-    "output_dir": "./log.txt"
+    "output_dir": "./log.txt", 
+    "require_fix": true,
+    "fix_residual":false,
+    "fix_atom":true, 
+    "missing_structure_log_name" : "missing_structure",  
+    "full_log_name" : "full_log",
+    "missing_structure_log_dir" : "./missing_structure_log.txt",
+    "full_log_dir": "./full_log.txt" 
 }

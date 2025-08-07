@@ -21,8 +21,8 @@ class PepFix:
             missing_structure_log_dir:str,
             missing_structure_log_name:str,
             require_fix:bool, 
-            fix_residual:bool = False,
-            fix_atom:bool = True,
+            fix_residual:bool,
+            fix_atom:bool,
             fix_threshold: int = 10, 
     ) -> None:
         
@@ -74,7 +74,7 @@ class PepFix:
 
 
 
-class ProteinStructure:
+class ProteinStructure():
     """
     ## A class encapsulates methods to 
     - Pretreat protein structures
@@ -83,7 +83,10 @@ class ProteinStructure:
     - Convert adjacency matrix to adjacency list
     """
     
-    def __init__(self, chain_label: str):
+    def __init__(
+            self, 
+            chain_label: str
+    ):
         self.chain_label = chain_label
         self.model = None
         self.atom_indices = []
@@ -91,7 +94,9 @@ class ProteinStructure:
         self.index_map_r = {}
         self.adj_list = {}
         
-    def preprocess_peptide(self) -> None:
+    def preprocess_peptide(
+            self
+    ) -> None:
         """
         Peptide pretreatment:
         1. Remove atoms composing rings on residuals.
@@ -113,7 +118,9 @@ class ProteinStructure:
         self.index_map = {atom_idx: i for i, atom_idx in enumerate(self.atom_indices)}
         self.index_map_r = {i: atom_idx for i, atom_idx in enumerate(self.atom_indices)}
     
-    def build_adjacency_matrix(self) -> tuple[np.ndarray, list[any]]:
+    def build_adjacency_matrix(
+            self
+    ) -> tuple[np.ndarray, list[any]]:
         """
         Convert the protein structural from the pdb file to 
         the undirectional graph 
@@ -132,7 +139,9 @@ class ProteinStructure:
         
         return adj_matrix, self.model.atom
     
-    def build_adjacency_list(self) -> dict[int, list[int]]:
+    def build_adjacency_list(
+            self
+    ) -> dict[int, list[int]]:
         """
         Convert the adjacency matrix to the adjacency list.
         """
@@ -154,7 +163,9 @@ class ProteinStructure:
         return self.adj_list
     
     @staticmethod
-    def matrix_to_list(matrix: np.ndarray) -> dict[int, list[int]]:
+    def matrix_to_list(
+            matrix: np.ndarray
+    ) -> dict[int, list[int]]:
         """
         Convert the adjacency matrix to the adjacency list.
         """
@@ -184,7 +195,11 @@ class DisulfideBondAnalyzer:
         self.protein = protein_structure
         self.logger = logger
         
-    def find_disulfide_atoms(self, residual_name: str = 'CYS', element_name: str = 'sg') -> list[int]:
+    def find_disulfide_atoms(
+            self, 
+            residual_name: str = 'CYS', 
+            element_name: str = 'sg'
+    ) -> list[int]:
         """
         Return the indexes of sulphur atoms in disulfide bonds
 
@@ -214,7 +229,10 @@ class DisulfideBondAnalyzer:
         
         return start_atoms
     
-    def has_loop(self, start: int) -> bool:
+    def has_loop(
+            self, 
+            start: int
+    ) -> bool:
         """
         Discriminate the existence of rings containing disulfide bonds.
 
@@ -303,10 +321,17 @@ class DisulfideBondAnalyzer:
 class IndexTransformer:
     """Transform index"""
     
-    def __init__(self, protein_structure: ProteinStructure):
+    def __init__(
+            self, 
+            protein_structure: ProteinStructure
+    ):
         self.protein = protein_structure
     
-    def transform_ids(self, ids: list[int], output_residual_index: bool = True) -> str:
+    def transform_ids(
+            self, 
+            ids: list[int], 
+            output_residual_index: bool = True
+    ) -> str:
         """
         Transform ids to 
 
@@ -383,14 +408,14 @@ class ProteinAnalyzer:
 
 
     def analyze_protein(
-        self, 
-        pdb_id: str, 
-        min_res: int,
-        output_dir: str,
-        full_log_name: str,
-        full_log_dir: str = None,
-        need_adj_matrix: bool = False,
-        output_residual_index: bool = True
+            self, 
+            pdb_id: str, 
+            min_res: int,
+            output_dir: str,
+            full_log_name: str,
+            full_log_dir: str = None,
+            need_adj_matrix: bool = False,
+            output_residual_index: bool = True
     ) -> None:
         """
         Detect the expected loop in a single protein.
@@ -498,16 +523,18 @@ class ProteinAnalyzer:
             cmd.delete(f'{pdb_id}')
     
     def batch_analyze(
-        self,
-        min_res: int,
-        rcsb_pdb_ids: str,
-        output_dir: str,
-        missing_structure_log_name,
-        full_log_name,
-        require_fix,
-        missing_structure_log_dir: str = None,
-        full_log_dir: str = None,
-        fix_threshold: int = 10
+            self,
+            min_res: int,
+            rcsb_pdb_ids: str,
+            output_dir: str,
+            require_fix:bool,
+            fix_residual:bool,
+            fix_atom:bool,
+            missing_structure_log_name:str,
+            full_log_name:str,
+            missing_structure_log_dir: str = None,
+            full_log_dir: str = None,
+            fix_threshold: int = 10
     ) -> None:
         """
         ### Analyze proteins in batch
@@ -532,11 +559,11 @@ class ProteinAnalyzer:
                     
                     self.pdb_fixer.fix_pdb(
                         pdb_id, 
-                        missing_structure_log_dir,
-                        missing_structure_log_name,
+                        missing_structure_log_dir = missing_structure_log_dir,
+                        missing_structure_log_name = missing_structure_log_name,
                         require_fix=require_fix,
-                        fix_residual=False, 
-                        fix_atom=True,
+                        fix_residual=fix_residual, 
+                        fix_atom=fix_atom,
                         fix_threshold=fix_threshold                  
                     )
                     # Analyze protein
