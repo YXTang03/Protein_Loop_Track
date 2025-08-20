@@ -554,7 +554,7 @@ class ProteinAnalyzer:
             
             for pdb_id in pbar:
                 pbar.set_description(f"Processing PDB: {pdb_id}" )
-                if pdb_id:
+                if require_fix:
                     # Fix pdb file
                     
                     self.pdb_fixer.fix_pdb(
@@ -567,10 +567,10 @@ class ProteinAnalyzer:
                         fix_threshold=fix_threshold                  
                     )
                     # Analyze protein
-                    self.analyze_protein(
-                        pdb_id, 
-                        min_res,
-                        output_dir, 
-                        full_log_name,
-                        full_log_dir=full_log_dir
-                    )
+                self.analyze_protein(
+                    pdb_id, 
+                    min_res,
+                    output_dir, 
+                    full_log_name,
+                    full_log_dir=full_log_dir
+                )
